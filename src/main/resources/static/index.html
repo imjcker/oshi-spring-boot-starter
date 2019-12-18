@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>imjcker</title>
+    <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/font-awesome/5.12.0/css/fontawesome.min.css">
+    <link rel="stylesheet" href="webjars/font-awesome/5.12.0/css/brands.min.css">
+    <style>
+        .card{
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a href="/" class="navbar-brand py-0"><img src="images/avatar.jpg" class="rounded-circle" style="width: 27px"
+                                               alt="Avatar"><span class="fa fa-lg">imjcker</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="jvm.html">JVM</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row" style="margin-top: 3px;">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">概要</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" id="osName" style="color: dodgerblue"></li>
+                    <li class="list-group-item" id="bootTime"></li>
+                    <li class="list-group-item" id="uptime"></li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">Disks</div>
+                <div class="row">
+                    <div class="col-md-12" id="disk" ></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Physical/Virtual Memory</div>
+                <div class="row">
+                    <div class="col-md-12" id="memory" style="height: 180px;"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">CPU 使用情况</div>
+                <div id="cpuInfo" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="webjars/jquery/2.1.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="webjars/highcharts/8.0.0/highcharts.js"></script>
+<script type="text/javascript">
+    $(function () {
+        getTime();
+        // setInterval(getCpuInfo,2000);
+        getCpuInfo();
+        getMemory();
+        getDisk();
+    });
+
+    function getTime() {
+        $.get('/getTime', function (res) {
+            $('#osName').addClass("fab fa-lg fa-"+res.osName);
+            $('#bootTime').text('开机时间: ' + res.bootTime);
+            $('#uptime').text('待机时间: ' + res.uptime);
+        });
+    }
+
+    function getCpuInfo() {
+
+        var chart = {
+            type: 'spline',
+            animation: Highcharts.svg, // don't animate in IE < IE 10.
+            marginRight: 10,
+            events: {
+                load: function () {
+                    // set up the updating of the chart each second
+                    var series = this.series[0];
+                    setInterval(function () {
+                        var x = (new Date()).getTime();
+                        $.get('/getCpuInfo', function (res) {
+                            series.addPoint([x, res], true, true);
+                        });
+                    }, 1200);
+                }
+            }
+        };
+        let credits = {
+            enabled: false
+        };
+        var title = {
+            text: '实时CPU使用占比'
+        };
+        var xAxis = {
+            type: 'datetime',
+            tickPixelInterval: 150
+        };
+        var yAxis = {
+            title: {
+                text: '百分比'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        };
+        var tooltip = {
+            formatter: function () {
+                return '<b>' + this.series.name + '</b><br/>' +
+                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                    Highcharts.numberFormat(this.y, 2);
+            }
+        };
+        var plotOptions = {
+            area: {
+                pointStart: 1940,
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
+                }
+            }
+        };
+        var legend = {
+            enabled: false
+        };
+        var exporting = {
+            enabled: false
+        };
+        var series = [{
+            name: 'CPU usage',
+            data: (function () {
+                // generate an array of random data
+                var data = [], time = (new Date()).getTime(), i;
+                for (i = -30; i <= 0; i += 1) {
+                    data.push({
+                        x: time + i * 1000,
+                        y: Math.random()
+                    });
+                }
+                return data;
+            }())
+        }];
+
+        var json = {};
+        json.credits = credits;
+        json.chart = chart;
+        json.title = title;
+        json.tooltip = tooltip;
+        json.xAxis = xAxis;
+        json.yAxis = yAxis;
+        json.legend = legend;
+        json.exporting = exporting;
+        json.series = series;
+        json.plotOptions = plotOptions;
+
+
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        $('#cpuInfo').highcharts(json);
+    }
+
+    function getMemory() {
+        $.get('/getAllMemory', function (res) {
+            var chart = {
+                type: 'bar'
+            };
+            var title = {
+                text: 'System memory usage'
+            };
+            var subtitle = {
+                text: 'Source: imjcker.com'
+            };
+            var xAxis = {
+                categories: ['Memory', 'Virtual Memory'],
+                title: {
+                    text: null
+                }
+            };
+            var yAxis = {
+                min: 0,
+                title: {
+                    text: 'MiB',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            };
+            var tooltip = {
+                valueSuffix: ' MB'
+            };
+            var plotOptions = {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                },
+                series: {
+                    stacking: 'normal'
+                }
+            };
+            var legend = {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            };
+            var credits = {
+                enabled: false
+            };
+
+            var series = [{
+                name: 'Used',
+                data: [res.total - res.available, res.v_total - res.v_available]
+            }, {
+                name: 'Available',
+                data: [res.available, res.v_available]
+            }
+            ];
+
+            var json = {};
+            json.chart = chart;
+            json.title = title;
+            // json.subtitle = subtitle;
+            json.tooltip = tooltip;
+            json.xAxis = xAxis;
+            json.yAxis = yAxis;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            json.legend = legend;
+            json.credits = credits;
+            $('#memory').highcharts(json);
+        });
+    }
+
+    function getDisk() {
+        $.get('/getDisk', function (res) {
+            let credits = {
+                enabled: false
+            };
+            var chart = {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            };
+            var title = {
+                text: 'Disk usage'
+            };
+            var tooltip = {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            };
+            var plotOptions = {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            };
+            var series = [{
+                type: 'pie',
+                name: 'Disk usage',
+                data: [
+                    ['Used', res.total - res.usable],
+                    ['Available', res.usable]
+                ]
+            }];
+
+            var json = {};
+            json.credits = credits;
+            json.chart = chart;
+            json.title = title;
+            json.tooltip = tooltip;
+            json.series = series;
+            json.plotOptions = plotOptions;
+            $('#disk').highcharts(json);
+        });
+    }
+</script>
+</body>
+</html>
