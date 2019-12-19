@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>imjcker</title>
+    <title>About</title>
     <link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="webjars/font-awesome/5.12.0/css/fontawesome.min.css">
     <link rel="stylesheet" href="webjars/font-awesome/5.12.0/css/brands.min.css">
     <style>
-        .card {
-            margin: 0;
-        }
     </style>
 </head>
 <body>
@@ -24,7 +21,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="jvm.html">JVM</a>
@@ -42,12 +39,12 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
+                <a class="nav-link" href="about.html">About <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input id="expired" class="form-control mr-sm-2" type="search" placeholder="页面刷新周期（S）" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="updateExpired();">Update</button>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
 </nav>
@@ -58,14 +55,14 @@
                 <div class="card-header">概要</div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item" id="osName" style="color: dodgerblue"></li>
-<!--                    <li class="list-group-item" id="bootTime"></li>-->
-                    <li class="list-group-item" id="uptime" style="font-size: x-large"></li>
+                    <li class="list-group-item" id="bootTime"></li>
+                    <li class="list-group-item" id="uptime"></li>
                 </ul>
             </div>
             <div class="card">
                 <div class="card-header">Disks</div>
                 <div class="row">
-                    <div class="col-md-12" id="disk"></div>
+                    <div class="col-md-12" id="disk" ></div>
                 </div>
             </div>
         </div>
@@ -87,33 +84,24 @@
 <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="webjars/highcharts/8.0.0/highcharts.js"></script>
 <script type="text/javascript">
-    let expired = 5;
-
-    function updateExpired() {
-        let ex = $('#expired').val();
-        console.log('ex: ' + ex);
-        if (ex.trim() !== '') {
-            expired = ex;
-            console.log('expired updated to : ' + ex);
-        }
-    }
-
     $(function () {
-        setInterval(getTime, expired/expired * 1000);
-        setInterval(getMemory, expired * 1000);
-        setInterval(getDisk, expired * 1000);
+        getTime();
+        // setInterval(getCpuInfo,2000);
         getCpuInfo();
+        getMemory();
+        getDisk();
     });
 
     function getTime() {
         $.get('/getTime', function (res) {
-            $('#osName').addClass("fab fa-lg fa-" + res.osName);
-            // $('#bootTime').text('开机时间: ' + res.bootTime);
+            $('#osName').addClass("fab fa-lg fa-"+res.osName);
+            $('#bootTime').text('开机时间: ' + res.bootTime);
             $('#uptime').text('待机时间: ' + res.uptime);
         });
     }
 
     function getCpuInfo() {
+
         var chart = {
             type: 'spline',
             animation: Highcharts.svg, // don't animate in IE < IE 10.
@@ -296,7 +284,6 @@
 
     function getDisk() {
         $.get('/getDisk', function (res) {
-            console.log(res);
             let credits = {
                 enabled: false
             };

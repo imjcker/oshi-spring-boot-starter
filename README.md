@@ -5,7 +5,7 @@
 live server system information
 
 ![index](docs/qrcode.jpg)
-![index](docs/sys.png)
+![index](docs/sys.gif)
 
 ## docker
 run within docker by execute script below.

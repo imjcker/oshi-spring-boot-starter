@@ -26,10 +26,7 @@ public class SysUtil {
         SystemInfo systemInfo = new SystemInfo();
         OperatingSystem os = systemInfo.getOperatingSystem();
         Map<String, String> map = new HashMap<>();
-        log.info("osName: {}", determineOsName(os.getManufacturer()));
-        log.info("java os: {}", ManagementFactory.getOperatingSystemMXBean().getName());
         map.put("osName", determineOsName(os.getManufacturer()));
-//        map.put("osName", determineOsName());
         map.put("bootTime", Instant.ofEpochSecond(os.getSystemBootTime()).toString());
         map.put("uptime", FormatUtil.formatElapsedSecs(os.getSystemUptime()));
         return map;
@@ -81,8 +78,10 @@ public class SysUtil {
         for (OSFileStore fs : fileSystem.getFileStores()) {
             long total = fs.getTotalSpace() >> 30;
             long usable = fs.getUsableSpace() >> 30;
-            map.put("total", total);
-            map.put("usable", usable);
+            if (total != 0 && usable != 0) {
+                map.put("total", total);
+                map.put("usable", usable);
+            }
         }
         return map;
     }
