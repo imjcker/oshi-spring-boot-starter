@@ -86,18 +86,18 @@ public class SysUtil {
         return map;
     }
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 //    public static SystemVO getSystemInfo() {
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         OperatingSystem os = si.getOperatingSystem();
 
-            List<String> strings = printServices(os);
-            strings.forEach(System.out::println);
+        List<String> strings = printServices(os);
+        strings.forEach(System.out::println);
 
-            System.out.println("My PID: " + os.getProcessId() + " with affinity "
-                    + Long.toBinaryString(os.getProcessAffinityMask(os.getProcessId())));
-        }
+        System.out.println("My PID: " + os.getProcessId() + " with affinity "
+                + Long.toBinaryString(os.getProcessAffinityMask(os.getProcessId())));
+    }
 
 
     private static void printComputerSystem(final ComputerSystem computerSystem) {
@@ -210,10 +210,11 @@ public class SysUtil {
 
         private List<String> disks = new ArrayList<>();
         private List<String> fileStore = new ArrayList<>();
-
+        // add comment by vim
         private String hostName;
         private String iPv4addr;
 
+        // add comment by vim
         @Override
         public String toString() {
             return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
