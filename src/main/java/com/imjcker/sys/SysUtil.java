@@ -26,10 +26,7 @@ public class SysUtil {
         SystemInfo systemInfo = new SystemInfo();
         OperatingSystem os = systemInfo.getOperatingSystem();
         Map<String, String> map = new HashMap<>();
-        log.info("osName: {}", determineOsName(os.getManufacturer()));
-        log.info("java os: {}", ManagementFactory.getOperatingSystemMXBean().getName());
         map.put("osName", determineOsName(os.getManufacturer()));
-//        map.put("osName", determineOsName());
         map.put("bootTime", Instant.ofEpochSecond(os.getSystemBootTime()).toString());
         map.put("uptime", FormatUtil.formatElapsedSecs(os.getSystemUptime()));
         return map;
@@ -81,24 +78,26 @@ public class SysUtil {
         for (OSFileStore fs : fileSystem.getFileStores()) {
             long total = fs.getTotalSpace() >> 30;
             long usable = fs.getUsableSpace() >> 30;
-            map.put("total", total);
-            map.put("usable", usable);
+            if (total != 0 && usable != 0) {
+                map.put("total", total);
+                map.put("usable", usable);
+            }
         }
         return map;
     }
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 //    public static SystemVO getSystemInfo() {
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         OperatingSystem os = si.getOperatingSystem();
 
-            List<String> strings = printServices(os);
-            strings.forEach(System.out::println);
+        List<String> strings = printServices(os);
+        strings.forEach(System.out::println);
 
-            System.out.println("My PID: " + os.getProcessId() + " with affinity "
-                    + Long.toBinaryString(os.getProcessAffinityMask(os.getProcessId())));
-        }
+        System.out.println("My PID: " + os.getProcessId() + " with affinity "
+                + Long.toBinaryString(os.getProcessAffinityMask(os.getProcessId())));
+    }
 
 
     private static void printComputerSystem(final ComputerSystem computerSystem) {
@@ -211,10 +210,11 @@ public class SysUtil {
 
         private List<String> disks = new ArrayList<>();
         private List<String> fileStore = new ArrayList<>();
-
+        // add comment by vim
         private String hostName;
         private String iPv4addr;
 
+        // add comment by vim
         @Override
         public String toString() {
             return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
