@@ -11,7 +11,7 @@ live server system information
 run within docker by execute script below.
 explanation: run service container as **monitor** and publish port on host server port **8081** or any other available ports you replace with. 
 ```shell script
-docker run -d --name monitor -p 8081:8080 imjcker/sys-spring-boot-starter:latest
+sudo docker run -d --name monitor -p 8081:8080 imjcker/sys-spring-boot-starter:latest
 ```
 
 
