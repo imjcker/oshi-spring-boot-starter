@@ -26,9 +26,10 @@ public class SysUtil {
         SystemInfo systemInfo = new SystemInfo();
         OperatingSystem os = systemInfo.getOperatingSystem();
         Map<String, String> map = new HashMap<>();
-
+        log.info("osName: {}", determineOsName(os.getManufacturer()));
+        log.info("java os: {}", ManagementFactory.getOperatingSystemMXBean().getName());
         map.put("osName", determineOsName(os.getManufacturer()));
-//        map.put("osName", determineOsName(ManagementFactory.getOperatingSystemMXBean().getName()));
+//        map.put("osName", determineOsName());
         map.put("bootTime", Instant.ofEpochSecond(os.getSystemBootTime()).toString());
         map.put("uptime", FormatUtil.formatElapsedSecs(os.getSystemUptime()));
         return map;
@@ -38,7 +39,7 @@ public class SysUtil {
         if (manufacturer.contentEquals("Microsoft") || manufacturer.contentEquals("windows")) {
             return "windows";
         }
-        if (manufacturer.contentEquals("apple") || manufacturer.contentEquals("macos")) {
+        if (manufacturer.contentEquals("Apple") || manufacturer.contentEquals("Mac OS X")) {
             return "apple";
         }
         if (manufacturer.contentEquals("centos")) {
@@ -47,8 +48,7 @@ public class SysUtil {
         if (manufacturer.contentEquals("ubuntu")) {
             return "ubuntu";
         }
-
-        return "unknown";
+        return determineOsName(ManagementFactory.getOperatingSystemMXBean().getName());
     }
 
     public static Map<String, Long> getMemory() {
