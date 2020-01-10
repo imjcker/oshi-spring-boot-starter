@@ -83,7 +83,7 @@
         </div>
     </div>
 </div>
-<script src="webjars/jquery/2.1.1/jquery.min.js"></script>
+<script src="webjars/jquery/3.0.0/jquery.min.js"></script>
 <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="webjars/highcharts/8.0.0/highcharts.js"></script>
 <script type="text/javascript">
@@ -100,8 +100,8 @@
 
     $(function () {
         setInterval(getTime, expired/expired * 1000);
-        setInterval(getMemory, expired * 1000);
-        setInterval(getDisk, expired * 1000);
+        getMemory();
+        getDisk();
         getCpuInfo();
     });
 
