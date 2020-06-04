@@ -1,0 +1,6 @@
+
+imjcker:
+  sys:
+    sys-view-servlet:
+      enabled: true
+      url-pattern: /aaa/info
