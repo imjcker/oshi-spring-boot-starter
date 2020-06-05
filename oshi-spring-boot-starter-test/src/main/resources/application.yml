@@ -1,6 +1,6 @@
 
 imjcker:
-  sys:
+  oshi:
     sys-view-servlet:
       enabled: true
       url-pattern: /aaa/info

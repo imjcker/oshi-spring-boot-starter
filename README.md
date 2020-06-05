@@ -4,6 +4,20 @@
 oshi integrated with spring boot, easy to use.
 
 ```xml
+<dependency>
+    <groupId>com.imjcker</groupId>
+    <artifactId>oshi-spring-boot-starter</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+```yaml
+# default configuration
+imjcker:
+  oshi:
+    sys-view-servlet:
+      enbled: true
+      url-pattern: /oshi/*
 
 ```
 

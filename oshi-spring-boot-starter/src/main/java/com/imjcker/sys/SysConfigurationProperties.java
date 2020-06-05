@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties("imjcker.sys")
+@ConfigurationProperties("imjcker.oshi")
 public class SysConfigurationProperties {
     private SysViewServlet sysViewServlet;
 
@@ -17,7 +17,7 @@ public class SysConfigurationProperties {
     @Data
     public static class SysViewServlet{
         private boolean enabled = true;
-        private String urlPattern = "/sys/*";
+        private String urlPattern = "/oshi/*";
     }
 
 }
