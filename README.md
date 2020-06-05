@@ -1,4 +1,4 @@
-# sys-spring-boot-starter
+# oshi-spring-boot-starter
 [![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
 
 oshi integrated with spring boot, easy to use.
@@ -20,8 +20,10 @@ imjcker:
       url-pattern: /oshi/*
 
 ```
-
+微信公众号  
 ![index](docs/qrcode.jpg)
+
+demo示例  
 ![index](docs/sys.gif)
 
 
