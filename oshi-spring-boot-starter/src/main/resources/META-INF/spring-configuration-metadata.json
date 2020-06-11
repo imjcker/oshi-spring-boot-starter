@@ -1,0 +1,38 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.imjcker.sys.SysConfigurationProperties",
+      "name": "imjcker.oshi",
+      "type": "com.imjcker.sys.SysConfigurationProperties"
+    },
+    {
+      "sourceType": "com.imjcker.sys.SysConfigurationProperties",
+      "name": "imjcker.oshi.sys-view-servlet",
+      "type": "com.imjcker.sys.SysConfigurationProperties$SysViewServlet"
+    },
+    {
+      "sourceType": "com.imjcker.sys.ImjckerSwaggerProperties",
+      "name": "imjcker.swagger",
+      "type": "com.imjcker.sys.ImjckerSwaggerProperties"
+    },
+    {
+      "sourceType": "com.imjcker.sys.ImjckerSwaggerProperties",
+      "name": "imjcker.swagger.api-info",
+      "type": "com.imjcker.sys.ImjckerSwaggerProperties$ApiInfo"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.imjcker.sys.ImjckerSwaggerProperties",
+      "name": "imjcker.swagger.base-package",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.imjcker.sys.ImjckerSwaggerProperties",
+      "defaultValue": false,
+      "name": "imjcker.swagger.enabled",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}

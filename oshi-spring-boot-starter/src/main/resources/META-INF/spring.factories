@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.imjcker.sys.SysAutoConfigure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.imjcker.sys.SysAutoConfigure,\
+  com.imjcker.sys.ImjckerSwaggerAutoConfigure
