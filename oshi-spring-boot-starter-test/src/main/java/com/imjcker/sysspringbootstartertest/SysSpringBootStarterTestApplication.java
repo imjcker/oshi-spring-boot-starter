@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SysSpringBootStarterTestApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SysSpringBootStarterTestApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SysSpringBootStarterTestApplication.class, args);
+    }
 
 }
